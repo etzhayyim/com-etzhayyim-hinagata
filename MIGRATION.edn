@@ -1,0 +1,24 @@
+{:migration/id :hinagata/standalone-root-integration
+ :migration/date "2026-07-18"
+ :migration/source {:repository "com-junkawasaki/root"
+                    :revision "86efa16a239445fb0955e2268291daeb2de9ee6a"
+                    :path "20-actors/hinagata"}
+ :migration/target "etzhayyim/com-etzhayyim-hinagata"
+ :migration/canonical-format :edn
+ :migration/root-only-paths ["cells/" "kotoba.app.edn" "manifest.edn"
+                             "methods/mesh.clj" "methods/social.cljc" "schema.edn"]
+ :migration/merged-paths ["data/ingest-sources.edn" "methods/cid.cljc"]
+ :migration/removed ["manifest.jsonld"]
+ :migration/wire-policy {:json :wire-only
+                         :generated-json :runtime-boundary}
+ :migration/central-assets
+ ["00-contracts/lexicons/com/etzhayyim/hinagata/clause.json"
+  "00-contracts/lexicons/com/etzhayyim/hinagata/statuteCitation.json"
+  "00-contracts/lexicons/com/etzhayyim/hinagata/template.json"]
+ :migration/central-assets-policy :retain-in-contract-repository
+ :migration/deprecated-languages {:go :pruned :tinygo :pruned
+                                  :found []}
+ :migration/root-drain
+ {:remove ["20-actors/hinagata"]
+  :update ["70-tools/src/etzhayyim/lint/shell-baseline.edn"]
+  :retain ["00-contracts/lexicons/com/etzhayyim/hinagata"]}}

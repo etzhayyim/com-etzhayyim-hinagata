@@ -1,6 +1,9 @@
-{:paths ["src"]
+{:paths ["src" "test"]
+ :deps {com-junkawasaki/multiformats-clj
+        {:git/url "https://github.com/kotoba-lang/multiformats"
+         :git/sha "e3a75a6376441cbf7aaefefce463b404b4254404"}}
  :aliases
- {:test {:extra-paths ["test"]
+ {:test {:extra-paths ["test" "tests"]
          :extra-deps {io.github.cognitect-labs/test-runner
                       {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
          :main-opts ["-m" "cognitect.test-runner"]}

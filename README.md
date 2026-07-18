@@ -12,7 +12,7 @@ adapt, and **execute electronically**.
 
 ## What it does (the four questions it answers)
 
-1. **A fair worldwide template commons + a publish mechanism** — `methods/publish.py`
+1. **A fair worldwide template commons + a publish mechanism** — `methods/publish.cljc`
    content-addresses every template body to a kotoba IPFS CIDv1 (byte-identical to `ipfs add
    --cid-version=1 --raw-leaves`) and snapshots the commons; anyone can fetch, verify the CID,
    and reuse. 11 seed templates (international sale, mutual NDA, GDPR DPA, JP lease (+EN),
@@ -24,7 +24,7 @@ adapt, and **execute electronically**.
    official source URL.
 3. **Published so anyone can use it** — Apache-2.0 + etzhayyim Charter Rider, CID-addressed,
    no paywall.
-4. **Electronic contracts** — `methods/esign.py` renders a template to a signable document and
+4. **Electronic contracts** — `methods/esign.cljc` renders a template to a signable document and
    wires the existing `com.etzhayyim.esign.*` substrate; the member signs client-side with a
    WebAuthn passkey bound to their DID (no-server-key).
 
@@ -38,8 +38,11 @@ citations, computed on read. See `CLAUDE.md` for the full gate set.
 ## Run
 
 ```bash
-cd 20-actors/hinagata
-python3 methods/analyze.py && python3 methods/coverage_report.py && python3 methods/publish.py
-python3 methods/esign.py --template tmpl.dpa-gdpr --signer did:plc:alice --signer did:plc:bob
-python3 tests/test_analyze.py && python3 tests/test_coverage.py && python3 tests/test_esign.py && python3 tests/test_wasm.py
+git clone https://github.com/etzhayyim/com-etzhayyim-hinagata
+cd com-etzhayyim-hinagata
+./run_tests.sh
 ```
+
+`manifest.edn`, `schema.edn`, and the data files are canonical EDN. JSON is emitted only at
+runtime protocol boundaries; shared AT Protocol lexicons remain owned by the central contracts
+repository under `00-contracts/lexicons/com/etzhayyim/hinagata/`.

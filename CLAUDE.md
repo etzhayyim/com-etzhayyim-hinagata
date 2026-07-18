@@ -58,25 +58,24 @@ a publish mechanism — yes (`publish.py` content-addresses every body, anyone c
 ## Layout
 
 ```
-20-actors/hinagata/
+com-etzhayyim-hinagata/
 ├── CLAUDE.md                                  # this file
 ├── README.md                                  # short orientation
-├── manifest.jsonld                            # actor manifest (5 cells, 8 gates)
+├── manifest.edn                               # canonical actor manifest (5 cells, 8 gates)
 ├── data/
 │   ├── seed-legal-template-graph.kotoba.edn   # hand-curated PUBLIC template↔clause↔statute seed
 │   └── ingest-sources.edn                     # bounded public statute-source allowlist (G7)
-├── methods/                                   # pure-stdlib (no numpy) → kotoba pywasm-runnable
-│   ├── analyze.py                             # edge-primary statutory-groundedness analyzer
-│   ├── datom_emit.py                          # kotoba Datom-log (EAVT) emitter — canonical state
-│   ├── coverage_report.py                     # honest coverage + statute-binding integrity (G5)
-│   ├── esign.py                               # electronic-contract bridge → com.etzhayyim.esign.*
-│   ├── publish.py                             # OUTWARD (G7): content-address every body → 80-data
-│   └── cid.py                                 # kotoba IPFS CIDv1 (raw/sha2-256) — ipfs-parity, no daemon
-├── tests/                                     # 23 tests, pure stdlib (network-free)
-│   └── test_analyze.py · test_coverage.py · test_esign.py · test_wasm.py
-├── wasm/                                      # kotoba pywasm component (componentize-py)
+├── methods/                                   # portable Clojure/ClojureScript actor methods
+│   ├── analyze.cljc                           # edge-primary statutory-groundedness analyzer
+│   ├── datom_emit.cljc                        # kotoba Datom-log (EAVT) emitter — canonical state
+│   ├── coverage_report.cljc                   # honest coverage + statute-binding integrity (G5)
+│   ├── esign.cljc                             # electronic-contract bridge → com.etzhayyim.esign.*
+│   ├── publish.cljc                           # OUTWARD (G7) publishing boundary
+│   └── cid.cljc                               # shared multiformats CIDv1 implementation
+├── tests/                                     # Clojure tests (network-free)
+├── wasm/                                      # kotoba WASM boundary
 │   ├── wit/world.wit                          # WIT world (analyze/datoms/coverage/envelope exports)
-│   ├── app.py                                 # export bodies (runnable in dev; embeds seed for WASM)
+│   ├── app.cljc                               # portable export bodies
 │   └── build.sh                               # embed seed → componentize → CID → DID service descriptor
 └── out/                                       # GENERATED — do not hand-edit
 ```
@@ -84,19 +83,7 @@ a publish mechanism — yes (`publish.py` content-addresses every body, anyone c
 ## Run
 
 ```bash
-cd 20-actors/hinagata
-python3 methods/analyze.py           # → out/groundedness-report.md
-python3 methods/datom_emit.py        # → out/legal-template-datoms.kotoba.edn (EAVT)
-python3 methods/coverage_report.py   # → out/coverage-report.md
-
-# electronic contract: render a template + build an UNSIGNED esign envelope (member signs client-side)
-python3 methods/esign.py --template tmpl.dpa-gdpr --signer did:plc:alice --signer did:plc:bob
-python3 methods/cid.py out/contract-tmpl.dpa-gdpr.md   # re-derive the document CID (ipfs-parity)
-
-# OUTWARD (G7) — content-address every template body + snapshot the public commons
-python3 methods/publish.py           # → 80-data/legal-templates/{bodies,PUBLISH.md,publish-manifest.json}
-
-python3 tests/test_analyze.py && python3 tests/test_coverage.py && python3 tests/test_esign.py && python3 tests/test_wasm.py  # 23 green
+./run_tests.sh
 ```
 
 ## Ontology (legal-template-ontology, `00-contracts/schemas/`)
