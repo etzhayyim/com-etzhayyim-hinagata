@@ -16,6 +16,8 @@
   behind #?(:clj …). Requires the good cid.cljc + esign.cljc siblings. The Python `__main__`
   body-writer + JSON serialization is behind #?(:clj …)."
   (:require [clojure.string :as str]
+            #?(:clj [cheshire.core :as json])
+            #?(:clj [hinagata.methods.analyze :as analyze])
             [hinagata.methods.cid :as cid]
             [hinagata.methods.esign :as esign]))
 
@@ -46,7 +48,7 @@
     (reduce
      (fn [{:keys [entries bodies]} tid]
        (let [body (esign/render-document tid nodes edges)
-             raw (cid/bytes-of body)
+             raw (cid/utf8-bytes body)
              cid-str (cid/cidv1-raw raw)
              statutes (vec (for [cl (get has-clause tid [])
                                  st (get cites cl [])
@@ -119,9 +121,8 @@
          (doseq [[tid body] bodies]
            (spit (clojure.java.io/file bodies-dir (str tid ".md")) body))
          (let [m (manifest entries)]
-           (require 'cheshire.core)
            (spit (clojure.java.io/file outdir "publish-manifest.json")
-                 (str ((requiring-resolve 'cheshire.core/generate-string) m {:pretty true}) "\n"))
+                 (str (json/generate-string m {:pretty true}) "\n"))
            (spit (clojure.java.io/file outdir "PUBLISH.md") (publish-md entries))
            m)))))
 
@@ -129,7 +130,6 @@
    (defn -main
      [& argv]
      (let [argv (vec argv)
-           load-file* (requiring-resolve 'hinagata.methods.analyze/load-file*)
            here (-> *file* clojure.java.io/file .getParentFile .getParentFile)
            seed (if (and (seq argv) (not (str/starts-with? (first argv) "--")))
                   (clojure.java.io/file (first argv))
@@ -137,7 +137,7 @@
            outdir (if (some #{"--out"} argv)
                     (clojure.java.io/file (nth argv (inc (.indexOf argv "--out"))))
                     (clojure.java.io/file (.getParentFile (.getParentFile here)) "80-data" "legal-templates"))
-           {:keys [nodes edges]} (load-file* seed)
+           {:keys [nodes edges]} (analyze/load-file* seed)
            m (publish nodes edges outdir)]
        (println (str "hinagata publish → " outdir " (" (get m "templateCount") " templates content-addressed)"))
        0)))
