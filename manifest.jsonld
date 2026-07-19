@@ -17,10 +17,7 @@
   "lexicons": [
     "com.etzhayyim.hinagata.template",
     "com.etzhayyim.hinagata.clause",
-    "com.etzhayyim.hinagata.statuteCitation",
-    "com.etzhayyim.esign.envelope",
-    "com.etzhayyim.esign.signature",
-    "com.etzhayyim.esign.completedEvent"
+    "com.etzhayyim.hinagata.statuteCitation"
   ],
   "substrate": {
     "state": "kotoba Datom log (ADR-2605312345) — methods/datom_emit.py emits canonical EAVT (template↔clause↔statute graph as durable state)",
